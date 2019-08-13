@@ -5,14 +5,37 @@
     body {}
 
     h1 {
-    color: darkslategrey;
-    text-align: center;
-    font-family: "Helvetica Neue";
-    font-size: 50px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 100;
-    line-height: 40px;
+        color: darkslategrey;
+        text-align: center;
+        font-family: "Helvetica Neue";
+        font-size: 50px;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 100;
+        line-height: 40px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .parent{
+        position: relative;
+    }
+    .over-img-east{
+        position: absolute;
+        max-width: 15%;
+        height: auto;
+        top: 23.8%;
+        left: 23%;
+    }
+    .over-img-west{
+        position: absolute;
+        max-width: 15%;
+        height: auto;
+        top: 23.8%;
+        left: 60%;
     }
 
 </style>
@@ -22,8 +45,15 @@
 
         <div id="like_button_container"></div>
 
-        <img src="east.png" alt="Eastbound" style="width:100%;">
-        <img src="west.png" alt="Westbound" style="width:100%;">
+        <div class="parent">
+                <img src="east.png" />
+                <img src="train_east.png" class="over-img-east"/>
+        </div>
+
+        <div class="parent">
+                <img src="west.png" />
+                <img src="train_west.png" class="over-img-west"/>
+        </div>
 
         <!-- Load React. -->
         <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
