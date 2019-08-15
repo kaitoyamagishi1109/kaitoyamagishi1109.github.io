@@ -65,7 +65,7 @@
         width: 100%;
     }
 
-    input[type=submit] {
+    input[type=button] {
         background-color: #016A03;
         color: #fff;
         cursor: pointer;
@@ -97,7 +97,7 @@
 
     /*when navigating through the items using the arrow keys:*/
     .autocomplete-active {
-        background-color: DodgerBlue !important; 
+        background-color: #016A03 !important; 
         color: #ffffff; 
     }
 </style>
@@ -114,7 +114,7 @@
             <div class="autocomplete" style="width:300px;">
                 <input id="myInput" type="text" name="myStation" placeholder="Station Name">
             </div>
-            <input type="submit">
+            <input type="button" value="GO" onclick=setStationName()>
             </form>
         </center>
             <script>
@@ -215,15 +215,18 @@
             });
             }
         /*An array containing all the country names in the world:*/
-        var countries = [
+        var stations = [
             "Boston College",
             "South Street",
             "Chestnut Hill Avenue",
-            "Chiswick Road","Sutherland Road",
-            "Washington Street","Warren Street",
+            "Chiswick Road",
+            "Sutherland Road",
+            "Washington Street",
+            "Warren Street",
             "Allston Street",
             "Griggs Street",
-            "Harvard Avenue","Packards Corner",
+            "Harvard Avenue",
+            "Packards Corner",
             "Babcock Street",
             "Pleasant Street",
             "Saint Paul Street",
@@ -236,8 +239,19 @@
             "Copley",
             "Arlington",
             "Boylston",
-            "Park Street"]
-        autocomplete(document.getElementById("myInput"), countries);
+            "Park Street"];
+        
+        autocomplete(document.getElementById("myInput"), stations);
+
+        function setStationName() {
+            var stationName = document.getElementsByName("myStation")[0].value;
+            station_index = stations.indexOf(stationName)
+            console.log(stations[station_index-2])
+            console.log(stations[station_index-1])
+            console.log(stations[station_index])
+            console.log(stations[station_index+1])
+            console.log(stations[station_index+2])
+        }
         </script>
 
         <!--East Image background and train-->
