@@ -23,7 +23,7 @@
         font-size: 30px;
         font-style: normal;
         font-variant: normal;
-        font-weight: 100;
+        font-weight: 200;
         line-height: 30px;
     }
 
@@ -47,7 +47,67 @@
         max-width: 15%;
         height: auto;
         top: 23.8%;
-        left: 60%;
+        right: 23%;
+    }
+    .selected-sta-east{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        right: 10%;
+        bottom: 25%;
+    }
+    .selected-sta-west{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        left: 5%;
+        bottom: 25%;
+    }
+    .one-West{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        right: 40%;
+        bottom: 25%;
+    }
+    .two-West{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        right: 75%;
+        bottom: 25%;
+    }
+    .one-East{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        left: 40%;
+        bottom: 25%;
+    }
+    .two-East{
+        position: absolute;
+        text-align: center;
+        vertical-align: top;
+        line-height: 1em;
+        font-size: 2.5vmin;
+        max-width: 25%;
+        left: 75%;
+        bottom: 25%;
     }
 
     * {
@@ -69,6 +129,10 @@
         background-color: #f1f1f1;
         padding: 10px;
         font-size: 16px;
+        font-family: "Helvetica Neue";
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 400;
     }
 
     input[type=text] {
@@ -132,7 +196,7 @@
             <input type="button" value="GO" onclick=setStationName()>
             </form>
         </center>
-            <script>
+        <script>
             function autocomplete(inp, arr) {
             /*the autocomplete function takes two arguments,
             the text field element and an array of possible autocompleted values:*/
@@ -229,56 +293,63 @@
                 closeAllLists(e.target);
             });
             }
-        /*An array containing all the country names in the world:*/
-        var stations = [
-            "Boston College",
-            "South Street",
-            "Chestnut Hill Avenue",
-            "Chiswick Road",
-            "Sutherland Road",
-            "Washington Street",
-            "Warren Street",
-            "Allston Street",
-            "Griggs Street",
-            "Harvard Avenue",
-            "Packards Corner",
-            "Babcock Street",
-            "Pleasant Street",
-            "Saint Paul Street",
-            "Boston University West",
-            "Boston University Central",
-            "Boston University East",
-            "Blandford Street",
-            "Kenmore",
-            "Hynes Convention Center",
-            "Copley",
-            "Arlington",
-            "Boylston",
-            "Park Street"];
-        
-        autocomplete(document.getElementById("myInput"), stations);
+            /*An array containing all the country names in the world:*/
+            var stations = [
+                "Boston College",
+                "South Street",
+                "Chestnut Hill Avenue",
+                "Chiswick Road",
+                "Sutherland Road",
+                "Washington Street",
+                "Warren Street",
+                "Allston Street",
+                "Griggs Street",
+                "Harvard Avenue",
+                "Packards Corner",
+                "Babcock Street",
+                "Pleasant Street",
+                "Saint Paul Street",
+                "Boston University West",
+                "Boston University Central",
+                "Boston University East",
+                "Blandford Street",
+                "Kenmore",
+                "Hynes Convention Center",
+                "Copley",
+                "Arlington",
+                "Boylston",
+                "Park Street"];
+            
+            autocomplete(document.getElementById("myInput"), stations);
 
-        function setStationName() {
-            var stationName = document.getElementsByName("myStation")[0].value;
-            station_index = stations.indexOf(stationName)
-            console.log(stations[station_index-2])
-            console.log(stations[station_index-1])
-            console.log(stations[station_index])
-            console.log(stations[station_index+1])
-            console.log(stations[station_index+2])
-        }
+            function setStationName() {
+                var stationName = document.getElementsByName("myStation")[0].value;
+                station_index = stations.indexOf(stationName)
+                document.getElementById("stationName1").innerHTML = stationName;
+                document.getElementById("stationName2").innerHTML = stationName;
+                document.getElementById("1West").innerHTML = stations[station_index-1]
+                document.getElementById("2West").innerHTML = stations[station_index-2]
+                document.getElementById("1East").innerHTML = stations[station_index+1]
+                document.getElementById("2East").innerHTML = stations[station_index+2]
+            }
         </script>
 
         <!--East Image background and train-->
         <div class="parent">
                 <img src="east.png" />
                 <img src="train_east.png" class="over-img-east"/>
+                <div class="selected-sta-east"><span id="stationName1"></span></div>
+                <div class="one-West"><span id="1West"></span></div>
+                <div class="two-West"><span id="2West"></span></div>
         </div>
 
         <!--West Image background and train-->
         <div class="parent">
                 <img src="west.png" />
                 <img src="train_west.png" class="over-img-west"/>
+                <div class="selected-sta-west"><span id="stationName2"></span></div>
+                <div class="one-East"><span id="1East"></span></div>
+                <div class="two-East"><span id="2East"></span></div>
         </div>
     </body>
 </html>
