@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <style>
     body {}
 
@@ -37,17 +38,17 @@
     }
     .over-img-east{
         position: absolute;
-        max-width: 15%;
-        height: auto;
-        top: 23.8%;
-        left: 23%;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        background: transparent;
     }
     .over-img-west{
         position: absolute;
-        max-width: 15%;
-        height: auto;
-        top: 23.8%;
-        right: 23%;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        background: transparent;
     }
     .selected-sta-east{
         position: absolute;
@@ -369,31 +370,75 @@
                 stationIDlist.push(stationIDs[station_index+1][0]);
                 stationIDlist.push(stationIDs[station_index+2][0]);
                 var passString = stationIDlist.join('/');
-                return passString;
+                return [stationIDlist, passString];
             }
 
-            function calllambda(passString) {
-                fetch('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString, {
-                    mode: "cors",
-                    method: "GET",
-                    cache: "no-cache",
-                    headers: {
+            function calllambda([stationIDlist, passString]) {
+                var vehicles = [];
+                var EastImage = document.getElementById('EastImage');
+                var WestImage = document.getElementById('WestImage');
+                axios.get('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString)
+                .then(function (response) {
+                    console.log(response["data"]);
+                    var objs = response["data"].split("!");
+                    for (var i=0; i<objs.length; i++) {
+                        vehicles[i] = JSON.parse(objs[i]);
+                        switch(vehicles[i].stop) {
+                            case stationIDlist[0]:
+                                if (vehicles[i].current_status == "STOPPED_AT") {
+                                    EastImage.src = "eastbound-1.png";
+                                }
+                                break
+                            case stationIDlist[1]:
+                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                    EastImage.src = "eastbound-2.png";
+                                }
+                                else if (vehicles[i].current_status == "STOPPED_AT") {
+                                    EastImage.src = "eastbound-3.png";
+                                }
+                                break
+                            case stationIDlist[2]:
+                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                    EastImage.src = "eastbound-4.png";
+                                }
+                                else if (vehicles[i].current_status == "STOPPED_AT") {
+                                    EastImage.src = "eastbound-5.png";
+                                }
+                                break
+                            case stationIDlist[5]:
+                                if (vehicles[i].current_status == "STOPPED_AT") {
+                                    WestImage.src = "westbound-1.png";
+                                }
+                                break
+                            case stationIDlist[4]:
+                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                    WestImage.src = "westbound-2.png";
+                                }
+                                else if (vehicles[i].current_status == "STOPPED_AT") {
+                                    WestImage.src = "westbound-3.png";
+                                }
+                                break
+                            case stationIDlist[3]:
+                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                    WestImage.src = "westbound-4.png";
+                                }
+                                else if (vehicles[i].current_status == "STOPPED_AT") {
+                                    WestImage.src = "westbound-5.png";
+                                }
+                                break
+                            default: 
+                                EastImage.src = "eastbound-1.png";
+                                WestImage.src = "westbound-1.png";
+                        }
                     }
                 })
-                .then(function(response) {
-                    console.log(response);
-                    return response;
-                })
-                .then(function(myJson) {
-                    console.log(JSON.stringify(myJson));
-                });
             }
         </script>
 
         <!--East Image background and train-->
         <div class="parent">
                 <img src="east.png" />
-                <img src="train_east.png" class="over-img-east"/>
+                <img src="eastbound-1.png" class="over-img-east" id="EastImage"/>
                 <div class="selected-sta-east"><span id="stationName1"></span></div>
                 <div class="one-West"><span id="1West"></span></div>
                 <div class="two-West"><span id="2West"></span></div>
@@ -402,7 +447,7 @@
         <!--West Image background and train-->
         <div class="parent">
                 <img src="west.png" />
-                <img src="train_west.png" class="over-img-west"/>
+                <img src="westbound-1.png" class="over-img-west" id="WestImage"/>
                 <div class="selected-sta-west"><span id="stationName2"></span></div>
                 <div class="one-East"><span id="1East"></span></div>
                 <div class="two-East"><span id="2East"></span></div>
