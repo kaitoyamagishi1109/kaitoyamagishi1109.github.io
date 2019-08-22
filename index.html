@@ -193,10 +193,11 @@
             <div class="autocomplete" style="width:300px;">
                 <input id="myInput" type="text" name="myStation" placeholder="Station Name">
             </div>
-            <input type="button" value="GO" onclick=setStationName()>
+            <input type="button" value="GO" onclick=calllambda(setStationName())>
             </form>
         </center>
         <script>
+            //Auto complete function
             function autocomplete(inp, arr) {
             /*the autocomplete function takes two arguments,
             the text field element and an array of possible autocompleted values:*/
@@ -293,7 +294,7 @@
                 closeAllLists(e.target);
             });
             }
-            /*An array containing all the country names in the world:*/
+            //array containing the station names
             var stations = [
                 "Boston College",
                 "South Street",
@@ -318,12 +319,42 @@
                 "Copley",
                 "Arlington",
                 "Boylston",
-                "Park Street"];
+                "Park Street"
+            ];
+            //array containing the station IDs
+            var stationIDs = [
+                /*to BC    to PS*/
+                /*BC*/["70107", "70106"],
+                ["70111", "70110"],
+                ["70113", "70112"],
+                ["70115", "70114"],
+                ["70117", "70116"],
+                ["70121", "70120"],
+                ["70125", "70124"],
+                ["70127", "70126"],
+                ["70129", "70128"],
+                ["70131", "70130"],
+                ["70135", "70134"],
+                ["70137", "70136"],
+                ["70139", "70138"],
+                ["70141", "70140"],
+                ["70143", "70142"],
+                ["70145", "70144"],
+                ["70147", "70146"],
+                ["70149", "70148"],
+                ["71151", "70150"],
+                ["70153", "70152"],
+                ["70155", "70154"],
+                ["70157", "70156"],
+                ["70159", "70158"],
+                /*PS*/["70196", "70199"]
+            ];
             
             autocomplete(document.getElementById("myInput"), stations);
 
             function setStationName() {
                 var stationName = document.getElementsByName("myStation")[0].value;
+                var stationIDlist = [];
                 station_index = stations.indexOf(stationName)
                 document.getElementById("stationName1").innerHTML = stationName;
                 document.getElementById("stationName2").innerHTML = stationName;
@@ -331,6 +362,31 @@
                 document.getElementById("2West").innerHTML = stations[station_index-2]
                 document.getElementById("1East").innerHTML = stations[station_index+1]
                 document.getElementById("2East").innerHTML = stations[station_index+2]
+                stationIDlist.push(stationIDs[station_index-2][1]);
+                stationIDlist.push(stationIDs[station_index-1][1]);
+                stationIDlist.push(stationIDs[station_index][1]);
+                stationIDlist.push(stationIDs[station_index][0]);
+                stationIDlist.push(stationIDs[station_index+1][0]);
+                stationIDlist.push(stationIDs[station_index+2][0]);
+                var passString = stationIDlist.join('/');
+                return passString;
+            }
+
+            function calllambda(passString) {
+                fetch('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString, {
+                    mode: "cors",
+                    method: "GET",
+                    cache: "no-cache",
+                    headers: {
+                    }
+                })
+                .then(function(response) {
+                    console.log(response);
+                    return response;
+                })
+                .then(function(myJson) {
+                    console.log(JSON.stringify(myJson));
+                });
             }
         </script>
 
