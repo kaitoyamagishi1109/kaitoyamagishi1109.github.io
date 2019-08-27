@@ -20,8 +20,8 @@
     p {
         color: #424242;
         text-align: center;
-        font-family: "Helvetica Neue";
         font-size: 30px;
+        font-family: "Helvetica Neue";
         font-style: normal;
         font-variant: normal;
         font-weight: 200;
@@ -34,9 +34,11 @@
     }
 
     .parent{
+        /* base image */
         position: relative;
     }
     .over-img-east{
+        /* overlay image of trains eastbound */
         position: absolute;
         top: 0%;
         left: 0%;
@@ -44,6 +46,7 @@
         background: transparent;
     }
     .over-img-west{
+        /* overlay image of trains westbound */
         position: absolute;
         top: 0%;
         left: 0%;
@@ -51,6 +54,7 @@
         background: transparent;
     }
     .selected-sta-east{
+        /* overlay text of station name */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -61,6 +65,7 @@
         bottom: 25%;
     }
     .selected-sta-west{
+        /* overlay text of station name */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -71,6 +76,7 @@
         bottom: 25%;
     }
     .one-West{
+        /* overlay text of station name one west of user selection */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -81,6 +87,7 @@
         bottom: 25%;
     }
     .two-West{
+        /* overlay text of station name two west of user selection */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -91,6 +98,7 @@
         bottom: 25%;
     }
     .one-East{
+        /* overlay text of station name one east of user selection */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -101,6 +109,7 @@
         bottom: 25%;
     }
     .two-East{
+        /* overlay text of station name two east of user selection */
         position: absolute;
         text-align: center;
         vertical-align: top;
@@ -109,6 +118,24 @@
         max-width: 25%;
         left: 75%;
         bottom: 25%;
+    }
+    .infoeast{
+        position: absolute;
+        top: 20px;
+        right: 60px;
+        font-family: "Helvetica Neue";
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 200;
+    }
+    .infowest{
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        font-family: "Helvetica Neue";
+        font-style: normal;
+        font-variant: normal;
+        font-weight: 200;
     }
 
     * {
@@ -369,6 +396,7 @@
                 stationIDlist.push(stationIDs[station_index][0]);
                 stationIDlist.push(stationIDs[station_index+1][0]);
                 stationIDlist.push(stationIDs[station_index+2][0]);
+                console.log(stationIDlist);
                 var passString = stationIDlist.join('/');
                 return [stationIDlist, passString];
             }
@@ -380,55 +408,65 @@
                 axios.get('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString)
                 .then(function (response) {
                     console.log(response["data"]);
-                    var objs = response["data"].split("!");
-                    for (var i=0; i<objs.length; i++) {
-                        vehicles[i] = JSON.parse(objs[i]);
-                        switch(vehicles[i].stop) {
-                            case stationIDlist[0]:
-                                if (vehicles[i].current_status == "STOPPED_AT") {
-                                    EastImage.src = "eastbound-1.png";
-                                }
-                                break
-                            case stationIDlist[1]:
-                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                    EastImage.src = "eastbound-2.png";
-                                }
-                                else if (vehicles[i].current_status == "STOPPED_AT") {
-                                    EastImage.src = "eastbound-3.png";
-                                }
-                                break
-                            case stationIDlist[2]:
-                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                    EastImage.src = "eastbound-4.png";
-                                }
-                                else if (vehicles[i].current_status == "STOPPED_AT") {
-                                    EastImage.src = "eastbound-5.png";
-                                }
-                                break
-                            case stationIDlist[5]:
-                                if (vehicles[i].current_status == "STOPPED_AT") {
-                                    WestImage.src = "westbound-1.png";
-                                }
-                                break
-                            case stationIDlist[4]:
-                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                    WestImage.src = "westbound-2.png";
-                                }
-                                else if (vehicles[i].current_status == "STOPPED_AT") {
-                                    WestImage.src = "westbound-3.png";
-                                }
-                                break
-                            case stationIDlist[3]:
-                                if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                    WestImage.src = "westbound-4.png";
-                                }
-                                else if (vehicles[i].current_status == "STOPPED_AT") {
-                                    WestImage.src = "westbound-5.png";
-                                }
-                                break
-                            default: 
-                                EastImage.src = "eastbound-1.png";
-                                WestImage.src = "westbound-1.png";
+                    for (var i=0; i<response["data"].length; i++) {
+                        vehicles[i] = JSON.parse(response["data"][i]);
+                        if (stationIDlist.includes(vehicles[i].stop)) {
+                            switch(vehicles[i].stop) {
+                                case stationIDlist[0]:
+                                    console.log("Sta0");
+                                    if (vehicles[i].current_status == "STOPPED_AT") {
+                                        EastImage.src = "eastbound-1.png";
+                                    }
+                                    break;
+                                case stationIDlist[1]:
+                                    console.log("Sta1");
+                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                        EastImage.src = "eastbound-2.png";
+                                    }
+                                    else if (vehicles[i].current_status == "STOPPED_AT") {
+                                        EastImage.src = "eastbound-3.png";
+                                    }
+                                    break;
+                                case stationIDlist[2]:
+                                    console.log("Sta2");
+                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                        EastImage.src = "eastbound-4.png";
+                                    }
+                                    else if (vehicles[i].current_status == "STOPPED_AT") {
+                                        EastImage.src = "eastbound-5.png";
+                                    }
+                                    break;
+                                case stationIDlist[5]:
+                                    console.log("Sta5");
+                                    if (vehicles[i].current_status == "STOPPED_AT") {
+                                        WestImage.src = "westbound-1.png";
+                                    }
+                                    break;
+                                case stationIDlist[4]:
+                                    console.log("Sta4");
+                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                        WestImage.src = "westbound-2.png";
+                                    }
+                                    else if (vehicles[i].current_status == "STOPPED_AT") {
+                                        WestImage.src = "westbound-3.png";
+                                    }
+                                    break;
+                                case stationIDlist[3]:
+                                    console.log("Sta3");
+                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                        WestImage.src = "westbound-4.png";
+                                    }
+                                    else if (vehicles[i].current_status == "STOPPED_AT") {
+                                        WestImage.src = "westbound-5.png";
+                                    }
+                                    break;
+                                default:
+                                    EastImage.src = "empty.png";
+                                    WestImage.src = "empty.png";
+                            }
+                        }
+                        else {
+
                         }
                     }
                 })
@@ -438,19 +476,21 @@
         <!--East Image background and train-->
         <div class="parent">
                 <img src="east.png" />
-                <img src="eastbound-1.png" class="over-img-east" id="EastImage"/>
+                <img src="empty.png" class="over-img-east" id="EastImage"/>
                 <div class="selected-sta-east"><span id="stationName1"></span></div>
                 <div class="one-West"><span id="1West"></span></div>
                 <div class="two-West"><span id="2West"></span></div>
+                <div class="infoeast">Next train approaching in: </div>
         </div>
 
         <!--West Image background and train-->
         <div class="parent">
                 <img src="west.png" />
-                <img src="westbound-1.png" class="over-img-west" id="WestImage"/>
+                <img src="empty.png" class="over-img-west" id="WestImage"/>
                 <div class="selected-sta-west"><span id="stationName2"></span></div>
                 <div class="one-East"><span id="1East"></span></div>
                 <div class="two-East"><span id="2East"></span></div>
+                <div class="infowest">Next train approaching in: </div>
         </div>
     </body>
 </html>
