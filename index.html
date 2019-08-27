@@ -105,7 +105,7 @@
         line-height: 1em;
         font-size: 2.5vmin;
         width: 25%;
-        left: 30%;
+        left: 35%;
         bottom: 25%;
     }
     .two-East{
@@ -412,79 +412,84 @@
                 axios.get('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString)
                 .then(function (response) {
                     console.log(response["data"]);
-                    for (var i=0; i<response["data"].length; i++) {
-                        vehicles[i] = JSON.parse(response["data"][i]);
-                        if (stationIDlist.includes(vehicles[i].stop)) {
-                            switch(vehicles[i].stop) {
-                                case stationIDlist[0]:
-                                    if (vehicles[i].timetil < timetil1) {
-                                        if (vehicles[i].current_status == "STOPPED_AT") {
-                                            EastImage.src = "eastbound-1.png";
+                    if (response["data"] == "No Vehicles Data") {
+                        alert("No Vehicles Data!!!");
+                    }
+                    else {
+                        for (var i=0; i<response["data"].length; i++) {
+                            vehicles[i] = JSON.parse(response["data"][i]);
+                            if (stationIDlist.includes(vehicles[i].stop)) {
+                                switch(vehicles[i].stop) {
+                                    case stationIDlist[0]:
+                                        if (vehicles[i].timetil < timetil1) {
+                                            if (vehicles[i].current_status == "STOPPED_AT") {
+                                                EastImage.src = "eastbound-1.png";
+                                            }
                                         }
-                                    }
-                                    break;
-                                case stationIDlist[1]:
-                                    if (vehicles[i].timetil < timetil1) {
-                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                            EastImage.src = "eastbound-2.png";
+                                        break;
+                                    case stationIDlist[1]:
+                                        if (vehicles[i].timetil < timetil1) {
+                                            if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                                EastImage.src = "eastbound-2.png";
+                                            }
+                                            else if (vehicles[i].current_status == "STOPPED_AT") {
+                                                EastImage.src = "eastbound-3.png";
+                                            }
                                         }
-                                        else if (vehicles[i].current_status == "STOPPED_AT") {
-                                            EastImage.src = "eastbound-3.png";
+                                        break;
+                                    case stationIDlist[2]:
+                                        if (vehicles[i].timetil < timetil1) {
+                                            if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                                EastImage.src = "eastbound-4.png";
+                                            }
+                                            else if (vehicles[i].current_status == "STOPPED_AT") {
+                                                EastImage.src = "eastbound-5.png";
+                                            }
                                         }
-                                    }
-                                    break;
-                                case stationIDlist[2]:
-                                    if (vehicles[i].timetil < timetil1) {
-                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                            EastImage.src = "eastbound-4.png";
+                                        break;
+                                    case stationIDlist[5]:
+                                        if (vehicles[i].timetil < timetil0) {
+                                            if (vehicles[i].current_status == "STOPPED_AT") {
+                                                WestImage.src = "westbound-1.png";
+                                            }
                                         }
-                                        else if (vehicles[i].current_status == "STOPPED_AT") {
-                                            EastImage.src = "eastbound-5.png";
+                                        break;
+                                    case stationIDlist[4]:
+                                        if (vehicles[i].timetil < timetil0) {
+                                            if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                                WestImage.src = "westbound-2.png";
+                                            }
+                                            else if (vehicles[i].current_status == "STOPPED_AT") {
+                                                WestImage.src = "westbound-3.png";
+                                            }
                                         }
-                                    }
-                                    break;
-                                case stationIDlist[5]:
-                                    if (vehicles[i].timetil < timetil0) {
-                                        if (vehicles[i].current_status == "STOPPED_AT") {
-                                            WestImage.src = "westbound-1.png";
+                                        break;
+                                    case stationIDlist[3]:
+                                        if (vehicles[i].timetil < timetil0) {
+                                            if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                                WestImage.src = "westbound-4.png";
+                                            }
+                                            else if (vehicles[i].current_status == "STOPPED_AT") {
+                                                WestImage.src = "westbound-5.png";
+                                            }
                                         }
-                                    }
-                                    break;
-                                case stationIDlist[4]:
-                                    if (vehicles[i].timetil < timetil0) {
-                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                            WestImage.src = "westbound-2.png";
-                                        }
-                                        else if (vehicles[i].current_status == "STOPPED_AT") {
-                                            WestImage.src = "westbound-3.png";
-                                        }
-                                    }
-                                    break;
-                                case stationIDlist[3]:
-                                    if (vehicles[i].timetil < timetil0) {
-                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                            WestImage.src = "westbound-4.png";
-                                        }
-                                        else if (vehicles[i].current_status == "STOPPED_AT") {
-                                            WestImage.src = "westbound-5.png";
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    EastImage.src = "empty.png";
-                                    WestImage.src = "empty.png";
+                                        break;
+                                    default:
+                                        EastImage.src = "empty.png";
+                                        WestImage.src = "empty.png";
+                                }
                             }
-                        }
-                        if (vehicles[i].direction_id == 0) {
-                            if (vehicles[i].timetil < timetil0) {
-                                document.getElementById("Wmins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
-                                timetil0 = vehicles[i].timetil;
+                            if (vehicles[i].direction_id == 0) {
+                                if (vehicles[i].timetil < timetil0) {
+                                    document.getElementById("Wmins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
+                                    timetil0 = vehicles[i].timetil;
+                                }
                             }
-                        }
-                        else if (vehicles[i].direction_id == 1) {
-                            if (vehicles[i].timetil < timetil1) {
-                                document.getElementById("Emins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
-                                timetil1 = vehicles[i].timetil;
+                            else if (vehicles[i].direction_id == 1) {
+                                if (vehicles[i].timetil < timetil1) {
+                                    document.getElementById("Emins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
+                                    timetil1 = vehicles[i].timetil;
+                                }
                             }
                         }
                     }
