@@ -121,8 +121,9 @@
     }
     .infoeast{
         position: absolute;
-        top: 20px;
-        right: 60px;
+        top: 7.5%;
+        right: 10%;
+        font-size: 3vmin;
         font-family: "Helvetica Neue";
         font-style: normal;
         font-variant: normal;
@@ -130,8 +131,9 @@
     }
     .infowest{
         position: absolute;
-        top: 20px;
-        left: 30px;
+        top: 7.5%;
+        left: 7.5%;
+        font-size: 3vmin;
         font-family: "Helvetica Neue";
         font-style: normal;
         font-variant: normal;
@@ -386,10 +388,10 @@
                 station_index = stations.indexOf(stationName)
                 document.getElementById("stationName1").innerHTML = stationName;
                 document.getElementById("stationName2").innerHTML = stationName;
-                document.getElementById("1West").innerHTML = stations[station_index-1]
-                document.getElementById("2West").innerHTML = stations[station_index-2]
-                document.getElementById("1East").innerHTML = stations[station_index+1]
-                document.getElementById("2East").innerHTML = stations[station_index+2]
+                document.getElementById("1West").innerHTML = stations[station_index-1];
+                document.getElementById("2West").innerHTML = stations[station_index-2];
+                document.getElementById("1East").innerHTML = stations[station_index+1];
+                document.getElementById("2East").innerHTML = stations[station_index+2];
                 stationIDlist.push(stationIDs[station_index-2][1]);
                 stationIDlist.push(stationIDs[station_index-1][1]);
                 stationIDlist.push(stationIDs[station_index][1]);
@@ -405,6 +407,8 @@
                 var vehicles = [];
                 var EastImage = document.getElementById('EastImage');
                 var WestImage = document.getElementById('WestImage');
+                var timetil0 = 9999999;
+                var timetil1 = 9999999;
                 axios.get('https://7d5msgvg9a.execute-api.ap-northeast-1.amazonaws.com/prod/' + passString)
                 .then(function (response) {
                     console.log(response["data"]);
@@ -413,51 +417,57 @@
                         if (stationIDlist.includes(vehicles[i].stop)) {
                             switch(vehicles[i].stop) {
                                 case stationIDlist[0]:
-                                    console.log("Sta0");
-                                    if (vehicles[i].current_status == "STOPPED_AT") {
-                                        EastImage.src = "eastbound-1.png";
+                                    if (vehicles[i].timetil < timetil1) {
+                                        if (vehicles[i].current_status == "STOPPED_AT") {
+                                            EastImage.src = "eastbound-1.png";
+                                        }
                                     }
                                     break;
                                 case stationIDlist[1]:
-                                    console.log("Sta1");
-                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                        EastImage.src = "eastbound-2.png";
-                                    }
-                                    else if (vehicles[i].current_status == "STOPPED_AT") {
-                                        EastImage.src = "eastbound-3.png";
+                                    if (vehicles[i].timetil < timetil1) {
+                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                            EastImage.src = "eastbound-2.png";
+                                        }
+                                        else if (vehicles[i].current_status == "STOPPED_AT") {
+                                            EastImage.src = "eastbound-3.png";
+                                        }
                                     }
                                     break;
                                 case stationIDlist[2]:
-                                    console.log("Sta2");
-                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                        EastImage.src = "eastbound-4.png";
-                                    }
-                                    else if (vehicles[i].current_status == "STOPPED_AT") {
-                                        EastImage.src = "eastbound-5.png";
+                                    if (vehicles[i].timetil < timetil1) {
+                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                            EastImage.src = "eastbound-4.png";
+                                        }
+                                        else if (vehicles[i].current_status == "STOPPED_AT") {
+                                            EastImage.src = "eastbound-5.png";
+                                        }
                                     }
                                     break;
                                 case stationIDlist[5]:
-                                    console.log("Sta5");
-                                    if (vehicles[i].current_status == "STOPPED_AT") {
-                                        WestImage.src = "westbound-1.png";
+                                    if (vehicles[i].timetil < timetil0) {
+                                        if (vehicles[i].current_status == "STOPPED_AT") {
+                                            WestImage.src = "westbound-1.png";
+                                        }
                                     }
                                     break;
                                 case stationIDlist[4]:
-                                    console.log("Sta4");
-                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                        WestImage.src = "westbound-2.png";
-                                    }
-                                    else if (vehicles[i].current_status == "STOPPED_AT") {
-                                        WestImage.src = "westbound-3.png";
+                                    if (vehicles[i].timetil < timetil0) {
+                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                            WestImage.src = "westbound-2.png";
+                                        }
+                                        else if (vehicles[i].current_status == "STOPPED_AT") {
+                                            WestImage.src = "westbound-3.png";
+                                        }
                                     }
                                     break;
                                 case stationIDlist[3]:
-                                    console.log("Sta3");
-                                    if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
-                                        WestImage.src = "westbound-4.png";
-                                    }
-                                    else if (vehicles[i].current_status == "STOPPED_AT") {
-                                        WestImage.src = "westbound-5.png";
+                                    if (vehicles[i].timetil < timetil0) {
+                                        if (vehicles[i].current_status == "IN_TRANSIT_TO" || "INCOMING_AT") {
+                                            WestImage.src = "westbound-4.png";
+                                        }
+                                        else if (vehicles[i].current_status == "STOPPED_AT") {
+                                            WestImage.src = "westbound-5.png";
+                                        }
                                     }
                                     break;
                                 default:
@@ -465,8 +475,17 @@
                                     WestImage.src = "empty.png";
                             }
                         }
-                        else {
-
+                        if (vehicles[i].direction_id == 0) {
+                            if (vehicles[i].timetil < timetil0) {
+                                document.getElementById("Wmins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
+                                timetil0 = vehicles[i].timetil;
+                            }
+                        }
+                        else if (vehicles[i].direction_id == 1) {
+                            if (vehicles[i].timetil < timetil1) {
+                                document.getElementById("Emins").innerHTML = ("Next train approaching in: "+vehicles[i].timetil.toString()+" mins.");
+                                timetil1 = vehicles[i].timetil;
+                            }
                         }
                     }
                 })
@@ -480,7 +499,7 @@
                 <div class="selected-sta-east"><span id="stationName1"></span></div>
                 <div class="one-West"><span id="1West"></span></div>
                 <div class="two-West"><span id="2West"></span></div>
-                <div class="infoeast">Next train approaching in: </div>
+                <div class="infoeast"><span id="Emins"></span></div>
         </div>
 
         <!--West Image background and train-->
@@ -490,7 +509,7 @@
                 <div class="selected-sta-west"><span id="stationName2"></span></div>
                 <div class="one-East"><span id="1East"></span></div>
                 <div class="two-East"><span id="2East"></span></div>
-                <div class="infowest">Next train approaching in: </div>
+                <div class="infowest"><span id="Wmins"></span></div>
         </div>
     </body>
 </html>
